@@ -6,15 +6,15 @@ import time
 
 # Cycle for country: get_last_quake --> check_not_exist --> save_mongo
 
-def get_last_quake(country):
+def get_last_quake():
     countries={'usa':'https://earthquake.usgs.gov/fdsnws/event/1/query?format=csv&orderby=time','japan':'https://www.jma.go.jp/bosai/quake/data/list.json','chile':'https://api.xor.cl/sismo/recent'}
     for country in countries:
         quake=get_quake_by_country(country, countries[country])
         if check_not_exist(quake['time'],quake['country']):
             save_mongo(quake)
-            print('1 new quake for {0} added', quake['country'])
+            print('1 new quake for "{0}" added'.format(quake['country']))
         else:
-            print('0 new quake for {0} added', quake['country'])
+            print('0 new quake for "{0}" added'.format(quake['country']))
         
 def check_not_exist(time, country): #Verify if quake exists for 'country'
     if conn.sismology.quakes.find_one({'time':time,'country':country})!=None:
@@ -57,6 +57,6 @@ def get_quake_by_country(country,url):
   return quake
 
 start=time.time()
-print(get_last_quake('usa'))
+print(get_last_quake())
 stop=time.time()
 print('--Elapsed--> ', stop-start)
