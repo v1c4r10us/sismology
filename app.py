@@ -41,11 +41,14 @@ def get_quake_by_country(country,url):
     r=r.text #Text of body
     r=json.loads(r) #Convert to json format 
     r=r[0] #Top 1 order by time    
-    vars=r['cod'].split('+') #Splitting latitude, longitude & depth
-    lat=vars[1]
-    vars=vars[2].split('-')
-    lon=vars[0]
-    dept=vars[1].replace('/','') #Converting depth to 'km'
+    vars=r['cod'][1:]
+    vars=vars.replace('+',',')
+    vars=vars.replace('-',',')
+    vars=vars.replace('/','')
+    vars=vars.split(',')
+    lat=vars[0]
+    lon=vars[1]
+    dept=vars[2] #Converting depth to 'km'
     quake={'time':r['at'], 'latitude':lat, 'longitude':lon, 'depth':dept, 'mag':r['mag'], 'place':r['en_anm'], 'country':country} #Typing for mongo
   elif country=='chile':
     r=requests.get(url) #Get data from api
